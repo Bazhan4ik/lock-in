@@ -19,12 +19,16 @@ chrome.runtime.onInstalled.addListener(async (opt) => {
 });
 
 const bannedAllTimes = [
-  "twitter",
-  "instagram",
+  "twitter.com",
+  "instagram.com",
 ];
 
 const lockInBanMode = [
-  "netflix",
+  "eneyida.tv",
+  "netflix.com",
+  "netflix.ca",
+  "facebook.com",
+  "facebook.ca",
 ]
 
 const banned = getUrls(bannedAllTimes);
