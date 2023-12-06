@@ -1,39 +1,8 @@
-import { getUrls } from "./utils/allurls";
+import { getBanned, getTempBanned, getUrls } from "./utils/allurls";
 
-chrome.runtime.onInstalled.addListener(async (opt) => {
-  // if (opt.reason === 'install') {
-  //   await chrome.storage.local.clear()
 
-  //   chrome.tabs.create({
-  //     active: true,
-  //     url: chrome.runtime.getURL('./installed.html'),
-  //   })
-  // }
-
-  // if (opt.reason === 'update') {
-  //   chrome.tabs.create({
-  //     active: true,
-  //     url: chrome.runtime.getURL('./src/update/index.html'),
-  //   })
-  // }
-});
-
-const bannedAllTimes = [
-  "twitter.com",
-  "instagram.com",
-];
-
-const lockInBanMode = [
-  "eneyida.tv",
-  "netflix.com",
-  "netflix.ca",
-  "facebook.com",
-  "facebook.ca",
-]
-
-const banned = getUrls(bannedAllTimes);
-const lockInBan = getUrls(lockInBanMode);
-
+let banned: string[] = null!;
+let tempBanned: string[] = null!;
 
 
 chrome.tabs.onCreated.addListener((tab) => {
@@ -64,11 +33,16 @@ async function checkTab(tab: chrome.tabs.Tab) {
 
   console.log("ALL TIME BANNED", banned);
 
+  if (!banned || !tempBanned) {
+    banned = await getBanned();
+    tempBanned = await getTempBanned();
+  }
+
   if (tab.url && banned.includes(new URL(tab.url).hostname)) {
     if (await chrome.tabs.get(tab.id!)) {
       chrome.tabs.remove(tab.id!);
     }
-  } else if (await isLockedIn() && tab.url && lockInBan.includes(new URL(tab.url).hostname)) {
+  } else if (await isLockedIn() && tab.url && tempBanned.includes(new URL(tab.url).hostname)) {
     if (await chrome.tabs.get(tab.id!)) {
       chrome.tabs.remove(tab.id!);
     }

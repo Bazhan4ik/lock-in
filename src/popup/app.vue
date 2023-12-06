@@ -3,6 +3,7 @@
 import { onMounted, ref } from "vue";
 
 const lockedIn = ref(false);
+const newWebsiteUrl = ref("");
 
 onMounted(async () => {
   chrome.storage.local.get(["lockedIn"], (result) => {
@@ -16,6 +17,14 @@ function changeLockedIn() {
   if (lockedIn.value) {
     chrome.runtime.sendMessage({ action: "enterLockedInMode" });
   }
+}
+
+async function addWebsite() {
+  const existingUrls: string[] = await new Promise((res) => chrome.storage.local.get(["additionalUrls"], data => res(data.additionalUrls)));
+
+  chrome.storage.local.set({ additionalUrls: [...(existingUrls || []), newWebsiteUrl.value] })
+
+  newWebsiteUrl.value = "";
 }
 
 </script>
@@ -35,8 +44,12 @@ function changeLockedIn() {
         {{ lockedIn ? "Unlock in" : "Lock in" }}
       </button>
     </div>
-    <div class="list">
-
+    <div class="add-website">
+      <p>Add more websites</p>
+      <div class="input">
+        <input v-model="newWebsiteUrl" type="url">
+        <button @click="addWebsite()">Add</button>
+      </div>
     </div>
   </main>
 </template>
@@ -70,5 +83,24 @@ h1 {
   padding: 12px 24px;
 }
 
-.lists {}
+.input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+}
+
+.add-website p {
+  font-size: 18px;
+  font-weight: 700;
+  padding: 0 12px;
+}
+
+.input input {
+  height: 24px;
+  background-color: rgb(199, 199, 199);
+  border-radius: 6px;
+  width: auto;
+  color: black;
+}
 </style>
