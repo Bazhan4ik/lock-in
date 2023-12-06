@@ -6,8 +6,6 @@ let tempBanned: string[] = null!;
 
 
 chrome.tabs.onCreated.addListener((tab) => {
-  console.log("TAB OPENED");
-
   checkTab(tab);
 });
 
@@ -33,8 +31,6 @@ chrome.runtime.onMessage.addListener(async (req: any, sender: chrome.runtime.Mes
 
 
 async function checkTab(tab: chrome.tabs.Tab) {
-
-  console.log("ALL TIME BANNED", banned);
 
   if (!banned || !tempBanned) {
     banned = await getBanned();

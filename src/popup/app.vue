@@ -1,15 +1,17 @@
 <script setup lang="ts">
-
 import { onMounted, ref } from "vue";
+
 
 const lockedIn = ref(false);
 const newWebsiteUrl = ref("");
+
 
 onMounted(async () => {
   chrome.storage.local.get(["lockedIn"], (result) => {
     lockedIn.value = result.lockedIn;
   })
 });
+
 
 function changeLockedIn() {
   chrome.storage.local.set({ lockedIn: !lockedIn.value });
@@ -18,7 +20,6 @@ function changeLockedIn() {
     chrome.runtime.sendMessage({ action: "enterLockedInMode" });
   }
 }
-
 async function addWebsite() {
   const existingUrls: string[] = await new Promise((res) => chrome.storage.local.get(["additionalUrls"], data => res(data.additionalUrls)));
 
@@ -36,7 +37,6 @@ async function addWebsite() {
     <h1>Lock in NOW</h1>
   </header>
 
-  <!-- <RouterView></RouterView> -->
   <main>
     <div class="lockin">
       <div>

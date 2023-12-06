@@ -25,8 +25,6 @@ const tempBanned = [
 export async function getTempBanned() {
   const additionalUrls: string[] = await new Promise(res => chrome.storage.local.get(["additionalUrls"], data => res(data.additionalUrls)));
 
-  console.log(additionalUrls);
-
   if (additionalUrls && (!Array.isArray(additionalUrls) || (additionalUrls.length > 0 && typeof additionalUrls[0] != "string"))) {
     return [];
   }
