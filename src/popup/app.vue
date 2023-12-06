@@ -25,6 +25,8 @@ async function addWebsite() {
   chrome.storage.local.set({ additionalUrls: [...(existingUrls || []), newWebsiteUrl.value] })
 
   newWebsiteUrl.value = "";
+
+  chrome.runtime.sendMessage({ action: "updateUrls" });
 }
 
 </script>

@@ -31,7 +31,7 @@ export async function getTempBanned() {
     return [];
   }
 
-  return getUrls([...tempBanned, ...additionalUrls]);
+  return getUrls([...tempBanned, ...(additionalUrls || [])]);
 }
 export async function getBanned() {
 

@@ -18,13 +18,16 @@ chrome.tabs.onUpdated.addListener((tabId: number, changeInfo: chrome.tabs.TabCha
 });
 
 
-chrome.runtime.onMessage.addListener((req: any, sender: chrome.runtime.MessageSender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (req: any, sender: chrome.runtime.MessageSender, sendResponse) => {
   if (req.action == "enterLockedInMode") {
     chrome.tabs.query({}, (tabs: chrome.tabs.Tab[]) => {
       tabs.forEach((tab) => {
         checkTab(tab);
       })
     });
+  } else if (req.action == "updateUrls") {
+    banned = await getBanned();
+    tempBanned = await getTempBanned();
   }
 });
 
