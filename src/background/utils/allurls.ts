@@ -23,9 +23,6 @@ const tempBanned = [
   "facebook.ca",
 ];
 export async function getTempBanned() {
-  return getUrls(tempBanned);
-}
-export async function getBanned() {
   const additionalUrls: string[] = await new Promise(res => chrome.storage.local.get(["additionalUrls"], data => res(data.additionalUrls)));
 
   console.log(additionalUrls);
@@ -34,6 +31,10 @@ export async function getBanned() {
     return [];
   }
 
-  return getUrls([...bannedAllTimes, ...(additionalUrls || [])]);
+  return getUrls([...tempBanned, ...additionalUrls]);
+}
+export async function getBanned() {
+
+  return getUrls(bannedAllTimes);
 }
 
