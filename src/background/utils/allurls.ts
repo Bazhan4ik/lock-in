@@ -14,6 +14,7 @@ export function getUrls(list: string[]) {
 const bannedAllTimes = [
   "twitter.com",
   "instagram.com",
+  "aniwatch.to",
 ];
 const tempBanned = [
   "eneyida.tv",
