@@ -15,11 +15,11 @@ const bannedAllTimes = [
   "twitter.com",
   "instagram.com",
   "aniwatch.to",
+  "netflix.com",
+  "netflix.ca",
 ];
 const tempBanned = [
   "eneyida.tv",
-  "netflix.com",
-  "netflix.ca",
   "facebook.com",
   "facebook.ca",
 ];
