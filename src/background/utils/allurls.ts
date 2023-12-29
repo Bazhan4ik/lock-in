@@ -18,6 +18,9 @@ const bannedAllTimes = [
   "netflix.com",
   "netflix.ca",
 ];
+const youtubeChannels = [
+  "@danny"
+]
 const tempBanned = [
   "eneyida.tv",
   "facebook.com",
@@ -36,4 +39,15 @@ export async function getBanned() {
 
   return getUrls(bannedAllTimes);
 }
-
+export function isBannedYoutubeChannel(url: string) {
+  console.log("THE HTML", document.querySelector("#primary-inner #text > a[href='/@danny']")?.innerHTML)
+  if (document.querySelector("#primary-inner #text > a[href='/@danny']")) {
+    return true
+  }
+  for (const channel of youtubeChannels) {
+    if (url.includes(channel)) {
+      return true;
+    }
+  }
+  return false;
+}

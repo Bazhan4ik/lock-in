@@ -1,4 +1,4 @@
-import { getBanned, getTempBanned, getUrls } from "./utils/allurls";
+import { getBanned, getTempBanned, getUrls, isBannedYoutubeChannel } from "./utils/allurls";
 
 
 let banned: string[] = null!;
@@ -26,6 +26,11 @@ chrome.runtime.onMessage.addListener(async (req: any, sender: chrome.runtime.Mes
   } else if (req.action == "updateUrls") {
     banned = await getBanned();
     tempBanned = await getTempBanned();
+  } else if (req.action == "closeTab") {
+    console.log("HELLO")
+    if (sender?.tab?.id && await chrome.tabs.get(sender.tab.id)) {
+      chrome.tabs.remove(sender.tab.id);
+    }
   }
 });
 
@@ -37,15 +42,29 @@ async function checkTab(tab: chrome.tabs.Tab) {
     tempBanned = await getTempBanned();
   }
 
-  if (tab.url && banned.includes(new URL(tab.url).hostname)) {
+  if (!tab.url) {
+    return;
+  }
+
+  const url = new URL(tab.url);
+
+
+  if (banned.includes(url.hostname)) {
     if (await chrome.tabs.get(tab.id!)) {
       chrome.tabs.remove(tab.id!);
     }
-  } else if (await isLockedIn() && tab.url && tempBanned.includes(new URL(tab.url).hostname)) {
+  } else if (await isLockedIn() && tempBanned.includes(url.hostname)) {
     if (await chrome.tabs.get(tab.id!)) {
       chrome.tabs.remove(tab.id!);
     }
   }
+
+
+  // else if (url.hostname == "www.youtube.com" && isBannedYoutubeChannel(url.toString())) {
+  //   if (await chrome.tabs.get(tab.id!)) {
+  //     chrome.tabs.remove(tab.id!);
+  //   }
+  // }
 
 
 
@@ -55,12 +74,11 @@ async function checkTab(tab: chrome.tabs.Tab) {
 function isLockedIn() {
   return new Promise((res, rej) => {
     chrome.storage.local.get(["lockedIn"], (result) => {
-      console.log("LOCKED IN:", result);
       res(result.lockedIn);
     });
   });
 }
 
-console.log('hello world from background')
+console.log('hello from background')
 
 export { }
